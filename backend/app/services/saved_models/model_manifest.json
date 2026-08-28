@@ -1,0 +1,36 @@
+{
+  "heart_sound_model": {
+    "file": "heart_sound_model.joblib",
+    "classes": [
+      "AV Block",
+      "Atrial Fibrillation",
+      "Early Systolic Murmur",
+      "Late Diastolic Murmur",
+      "Late Systolic Murmur",
+      "Mid Systolic Murmur",
+      "Normal",
+      "S3",
+      "S4",
+      "Tachycardia"
+    ],
+    "samples_trained": 50
+  },
+  "lung_sound_model": {
+    "file": "lung_sound_model.joblib",
+    "classes": [
+      "Normal",
+      "Pleural Rub",
+      "Rhonchi",
+      "Wheezing"
+    ],
+    "samples_trained": 35
+  },
+  "binary_screening_model": {
+    "file": "binary_screening_model.joblib",
+    "classes": [
+      "Normal",
+      "Abnormal"
+    ],
+    "samples_trained": 85
+  }
+}

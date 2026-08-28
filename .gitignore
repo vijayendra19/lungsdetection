@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Production build artifacts
+dist/
+frontend/dist/
+build/
+*.egg-info/
+
+# Python bytecode & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+!.env.example
+
+# Testing and caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local databases & uploads
+*.db
+*.sqlite3
+smart_stethoscope.db
+backend/smart_stethoscope.db
+backend/static/uploads/*
+backend/static/heatmaps/*
+!backend/static/uploads/.gitkeep
+!backend/static/heatmaps/.gitkeep
+
+# System & Archive files
+.DS_Store
+__MACOSX/
+._*
+*.zip
+*.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
