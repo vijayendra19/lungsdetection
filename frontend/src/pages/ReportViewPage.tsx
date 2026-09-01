@@ -21,6 +21,7 @@ export const ReportViewPage: React.FC = () => {
   const navigate = useNavigate();
   const [report, setReport] = useState<ClinicalReport | null>(null);
   const [loading, setLoading] = useState(true);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchReport = async () => {
@@ -35,6 +36,20 @@ export const ReportViewPage: React.FC = () => {
       setError(err.response?.data?.detail || 'Failed to retrieve clinical report from server.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!id) return;
+    setDownloadingPdf(true);
+    try {
+      const filename = `clinical_report_${report?.patient_identifier || id.slice(0, 8)}.pdf`;
+      await reportService.downloadReportPdf(id, filename);
+    } catch (err: any) {
+      console.error('PDF download error:', err);
+      alert('Failed to download PDF: ' + (err.response?.data?.detail || err.message));
+    } finally {
+      setDownloadingPdf(false);
     }
   };
 
@@ -95,7 +110,6 @@ export const ReportViewPage: React.FC = () => {
   }
 
   const isNormal = (report.primary_diagnosis || '').toLowerCase().includes('normal');
-  const pdfUrl = id ? reportService.getReportPdfUrl(id) : '#';
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -130,15 +144,23 @@ export const ReportViewPage: React.FC = () => {
             </Link>
           )}
 
-          <a
-            href={pdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 hover:opacity-95 transition-all"
+          <button
+            onClick={handleDownloadPdf}
+            disabled={downloadingPdf}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 hover:opacity-95 disabled:opacity-50 transition-all cursor-pointer"
           >
-            <Download className="w-4 h-4" />
-            <span>Download Printable PDF</span>
-          </a>
+            {downloadingPdf ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Generating PDF...</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                <span>Download Printable PDF</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 
