@@ -81,9 +81,72 @@ def get_report_or_pdf(
     """
     Retrieves report summary with plain-language explanation and visual assets,
     or generates and streams the printable medical PDF report (when ?format=pdf).
-    Enforces strict user ownership check.
+    Accepts report_id, analysis_id, or recording_id. Enforces user ownership.
     """
+    # 1. Search directly by Report.id
     report = db.query(Report).filter(Report.id == report_id).first()
+
+    # 2. Search by Analysis ID or Recording ID if not found directly
+    if not report:
+        report = (
+            db.query(Report)
+            .filter((Report.analysis_id == report_id) | (Report.recording_id == report_id))
+            .first()
+        )
+
+    # 3. If still no Report exists, check if an Analysis exists and auto-generate the report
+    if not report:
+        analysis = db.query(Analysis).filter(Analysis.id == report_id).first()
+        recording = None
+        if analysis:
+            recording = analysis.recording
+        else:
+            recording = db.query(Recording).filter(Recording.id == report_id).first()
+            if recording:
+                analysis = (
+                    db.query(Analysis)
+                    .filter(Analysis.recording_id == recording.id)
+                    .order_by(Analysis.created_at.desc())
+                    .first()
+                )
+
+        if analysis and recording:
+            # Ownership verification
+            if recording.user_id != current_user.id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Access denied: You do not have permission to view this report.",
+                )
+
+            is_normal = "normal" in analysis.predicted_class.lower()
+            explanation = get_clinical_explanation(
+                category=recording.sound_category,
+                prediction=analysis.predicted_class,
+                classification="Normal" if is_normal else "Abnormal",
+                confidence=float(analysis.confidence_score),
+            )
+
+            report = Report(
+                id=str(uuid.uuid4()),
+                user_id=current_user.id,
+                recording_id=recording.id,
+                analysis_id=analysis.id,
+                report_title=f"Clinical Auscultation Report - {recording.file_name}",
+                patient_identifier=f"PAT-{recording.id[:6].upper()}",
+                primary_diagnosis=analysis.predicted_class,
+                severity="normal" if is_normal else "moderate",
+                clinical_summary=explanation,
+                recommendations=(
+                    "Routine annual cardiopulmonary follow-up."
+                    if is_normal
+                    else "Recommend 2D-Echocardiogram and formal cardiology consultation."
+                ),
+                status="finalized",
+            )
+            db.add(report)
+            db.commit()
+            db.refresh(report)
+
     if not report:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Clinical report not found")
 

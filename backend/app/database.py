@@ -55,15 +55,18 @@ def init_db():
                 id=str(uuid.uuid4()),
                 email="dr.smith@hospital.org",
                 hashed_password=get_password_hash("SecurePassword123!"),
-                full_name="Dr. Sarah Smith, MD",
+                full_name="Dr. Vijayendra Bharathi, MD",
                 role="clinician",
                 is_active=True,
             )
             db.add(demo_user)
             db.commit()
             print("Auto-seeded demo clinician: dr.smith@hospital.org / SecurePassword123!")
+        else:
+            demo_user.full_name = "Dr. Vijayendra Bharathi, MD"
+            db.commit()
     except Exception as e:
-        print(f"Notice: Could not seed demo user: {e}")
+        print(f"Notice: Could not seed/update demo user: {e}")
         db.rollback()
     finally:
         db.close()

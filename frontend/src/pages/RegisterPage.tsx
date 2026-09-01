@@ -69,7 +69,7 @@ export const RegisterPage: React.FC = () => {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Dr. Sarah Smith, MD"
+                placeholder="Dr. Vijayendra Bharathi, MD"
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
               />
             </div>
