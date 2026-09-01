@@ -13,10 +13,10 @@ import {
   CheckCircle2, 
   AlertCircle, 
   Play, 
-  Pause,
-  RotateCcw,
-  Activity,
-  ArrowRight
+  Pause, 
+  RotateCcw, 
+  Activity, 
+  ArrowRight 
 } from 'lucide-react';
 
 const CHEST_LOCATIONS = {
@@ -104,9 +104,9 @@ export const NewAnalysisPage: React.FC = () => {
     }
   };
 
-  const handleCategoryChange = (newCat: 'heart' | 'lung' | 'mixed') => {
-    setCategory(newCat);
-    setLocation(CHEST_LOCATIONS[newCat][0].id);
+  const handleCategoryChange = (cat: 'heart' | 'lung' | 'mixed') => {
+    setCategory(cat);
+    setLocation(CHEST_LOCATIONS[cat][0].id);
   };
 
   const togglePlayUpload = () => {
@@ -141,12 +141,12 @@ export const NewAnalysisPage: React.FC = () => {
     e.preventDefault();
     setError(null);
 
-    let audioToSubmit: File | null = null;
+    let audioToSubmit: File;
     let fileName = '';
 
     if (mode === 'upload') {
       if (!file) {
-        setError('Please select or drop a .wav digital stethoscope recording.');
+        setError('Please select or drop a valid digital stethoscope .wav file.');
         return;
       }
       audioToSubmit = file;
@@ -198,34 +198,34 @@ export const NewAnalysisPage: React.FC = () => {
   const hasValidAudio = (mode === 'upload' && file !== null) || (mode === 'record' && audioBlob !== null);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 bg-slate-50">
       
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-100 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">
           New Auscultation Screening
         </h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Upload or capture digital stethoscope audio for instant Mel-spectrogram & Grad-CAM neural diagnosis.
         </p>
       </div>
 
       {(error || recorderError) && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 text-rose-400 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-rose-700 text-sm">
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-500" />
           <span>{error || recorderError}</span>
         </div>
       )}
 
       {/* Mode Switcher Tabs */}
-      <div className="grid grid-cols-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl">
+      <div className="grid grid-cols-2 p-1.5 bg-slate-200/80 border border-slate-300/80 rounded-2xl">
         <button
           type="button"
           onClick={() => setMode('upload')}
-          className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
             mode === 'upload'
-              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+              : 'text-slate-600 hover:text-blue-950'
           }`}
         >
           <UploadCloud className="w-4 h-4" />
@@ -234,10 +234,10 @@ export const NewAnalysisPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setMode('record')}
-          className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
             mode === 'record'
-              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+              : 'text-slate-600 hover:text-blue-950'
           }`}
         >
           <Mic className="w-4 h-4" />
@@ -249,8 +249,8 @@ export const NewAnalysisPage: React.FC = () => {
         
         {/* Input Container: Upload vs Live Recording */}
         {mode === 'upload' ? (
-          <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+          <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm">
+            <label className="block text-xs font-extrabold text-blue-950 uppercase tracking-wider mb-3">
               1. Digital Stethoscope Audio File (.wav)
             </label>
 
@@ -260,8 +260,8 @@ export const NewAnalysisPage: React.FC = () => {
               onClick={() => fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
                 file
-                  ? 'border-cyan-500/50 bg-cyan-500/5'
-                  : 'border-slate-800 hover:border-slate-700 bg-slate-950/50 hover:bg-slate-950/80'
+                  ? 'border-blue-500 bg-blue-50/40'
+                  : 'border-slate-300 hover:border-blue-500 bg-slate-50/60 hover:bg-blue-50/20'
               }`}
             >
               <input
@@ -274,27 +274,27 @@ export const NewAnalysisPage: React.FC = () => {
 
               {file ? (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center border border-cyan-500/20">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
                     <FileAudio className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-slate-200">{file.name}</h3>
+                    <h3 className="font-bold text-sm text-blue-950">{file.name}</h3>
                     <span className="text-xs text-slate-500">
                       {(file.size / 1024).toFixed(1)} KB • Digital PCM WAV
                     </span>
                   </div>
-                  <span className="text-xs font-medium text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20 mt-1">
+                  <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200 mt-1">
                     Audio Loaded (Click to change)
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                     <UploadCloud className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-200">
-                      Drag & drop digital stethoscope recording, or <span className="text-cyan-400">browse</span>
+                    <p className="text-sm font-bold text-blue-950">
+                      Drag & drop digital stethoscope recording, or <span className="text-blue-600 underline">browse</span>
                     </p>
                     <p className="text-xs text-slate-500 mt-1">Standard 16-bit PCM WAV (1s – 60s)</p>
                   </div>
@@ -304,7 +304,7 @@ export const NewAnalysisPage: React.FC = () => {
 
             {/* Audio Preview Player */}
             {uploadAudioUrl && (
-              <div className="mt-4 p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between">
+              <div className="mt-4 p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
                 <audio
                   ref={uploadAudioRef}
                   src={uploadAudioUrl}
@@ -315,13 +315,13 @@ export const NewAnalysisPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={togglePlayUpload}
-                    className="w-9 h-9 rounded-xl bg-cyan-500 text-white flex items-center justify-center shadow-md shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-transform"
+                    className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                   >
                     {isPlayingUpload ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
                   </button>
-                  <span className="text-xs font-medium text-slate-300">Preview Audio File</span>
+                  <span className="text-xs font-bold text-blue-950">Preview Audio File</span>
                 </div>
-                <span className="text-xs text-emerald-400 flex items-center gap-1">
+                <span className="text-xs text-emerald-600 font-bold flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Ready
                 </span>
@@ -330,16 +330,16 @@ export const NewAnalysisPage: React.FC = () => {
           </div>
         ) : (
           /* Live Recording Component */
-          <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-6">
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+          <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm space-y-6">
+            <label className="block text-xs font-extrabold text-blue-950 uppercase tracking-wider">
               1. In-Browser Live Stethoscope Recording
             </label>
 
-            <div className="bg-slate-950 rounded-2xl border border-slate-800 p-6 flex flex-col items-center justify-center text-center gap-5">
+            <div className="bg-slate-50 rounded-2xl border border-slate-200 p-6 flex flex-col items-center justify-center text-center gap-5">
               
               {/* Timer Display */}
               <div className="flex flex-col items-center">
-                <span className="font-mono text-3xl sm:text-4xl font-black text-slate-100 tracking-wider">
+                <span className="font-mono text-3xl sm:text-4xl font-black text-blue-950 tracking-wider">
                   {formatTimer(recordingTime)}
                 </span>
                 <span className="text-xs text-slate-500 mt-1">
@@ -350,13 +350,13 @@ export const NewAnalysisPage: React.FC = () => {
               {/* Audio Meter Visualizer */}
               {isRecording && (
                 <div className="w-full max-w-xs space-y-2">
-                  <div className="flex justify-between text-[10px] text-slate-400">
+                  <div className="flex justify-between text-[10px] text-slate-500 font-semibold">
                     <span>Input Level</span>
-                    <span className="text-cyan-400">{audioLevel}%</span>
+                    <span className="text-emerald-600 font-bold">{audioLevel}%</span>
                   </div>
-                  <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-cyan-500 to-rose-500 transition-all duration-75"
+                      className="h-full bg-gradient-to-r from-emerald-500 to-rose-500 transition-all duration-75"
                       style={{ width: `${audioLevel}%` }}
                     ></div>
                   </div>
@@ -369,7 +369,7 @@ export const NewAnalysisPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={startRecording}
-                    className="px-6 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-xl shadow-rose-600/30 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95"
+                    className="px-6 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm shadow-xl shadow-rose-600/30 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <Mic className="w-5 h-5" />
                     <span>{audioBlob ? 'Record Again' : 'Start Recording'}</span>
@@ -378,7 +378,7 @@ export const NewAnalysisPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={stopRecording}
-                    className="px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/30 flex items-center gap-2.5 transition-all animate-pulse"
+                    className="px-6 py-3 rounded-2xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-sm shadow-xl shadow-rose-600/30 flex items-center gap-2.5 transition-all animate-pulse cursor-pointer"
                   >
                     <MicOff className="w-5 h-5" />
                     <span>Stop Recording</span>
@@ -389,7 +389,7 @@ export const NewAnalysisPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={resetRecording}
-                    className="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="p-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-700 transition-colors cursor-pointer"
                     title="Clear Recording"
                   >
                     <RotateCcw className="w-5 h-5" />
@@ -399,7 +399,7 @@ export const NewAnalysisPage: React.FC = () => {
 
               {/* Recorded Audio Playback */}
               {recordedAudioUrl && !isRecording && (
-                <div className="w-full mt-2 p-3 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-between">
+                <div className="w-full mt-2 p-3.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between shadow-sm">
                   <audio
                     ref={recordAudioRef}
                     src={recordedAudioUrl}
@@ -410,14 +410,14 @@ export const NewAnalysisPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={togglePlayRecord}
-                      className="w-9 h-9 rounded-xl bg-cyan-500 text-white flex items-center justify-center shadow-md shadow-cyan-500/20 hover:scale-105 active:scale-95 transition-transform"
+                      className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                     >
                       {isPlayingRecord ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
                     </button>
-                    <span className="text-xs font-medium text-slate-300">Playback Captured Stethoscope Audio</span>
+                    <span className="text-xs font-bold text-blue-950">Playback Captured Stethoscope Audio</span>
                   </div>
-                  <span className="text-xs text-emerald-400 flex items-center gap-1 font-semibold">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <span className="text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 flex items-center gap-1 font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     Encoded (4000 Hz WAV)
                   </span>
                 </div>
@@ -428,8 +428,8 @@ export const NewAnalysisPage: React.FC = () => {
         )}
 
         {/* Diagnostic Category & Auscultation Site */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-6">
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm space-y-6">
+          <label className="block text-xs font-extrabold text-blue-950 uppercase tracking-wider">
             2. Sound Category & Chest Auscultation Site
           </label>
 
@@ -438,52 +438,52 @@ export const NewAnalysisPage: React.FC = () => {
             <button
               type="button"
               onClick={() => handleCategoryChange('heart')}
-              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 ${
+              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 cursor-pointer ${
                 category === 'heart'
-                  ? 'border-rose-500/50 bg-rose-500/10 text-rose-300 shadow-lg shadow-rose-500/10'
-                  : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'
+                  ? 'border-rose-300 bg-rose-50/80 text-rose-700 font-bold shadow-sm'
+                  : 'border-slate-200 bg-slate-50/70 text-slate-600 hover:border-slate-300 hover:bg-slate-100'
               }`}
             >
-              <Heart className="w-6 h-6 text-rose-400" />
-              <span className="text-xs font-bold uppercase tracking-wider">Heart Sounds</span>
+              <Heart className="w-6 h-6 text-rose-500" />
+              <span className="text-xs font-extrabold uppercase tracking-wider">Heart Sounds</span>
             </button>
 
             <button
               type="button"
               onClick={() => handleCategoryChange('lung')}
-              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 ${
+              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 cursor-pointer ${
                 category === 'lung'
-                  ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300 shadow-lg shadow-cyan-500/10'
-                  : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'
+                  ? 'border-blue-300 bg-blue-50/80 text-blue-700 font-bold shadow-sm'
+                  : 'border-slate-200 bg-slate-50/70 text-slate-600 hover:border-slate-300 hover:bg-slate-100'
               }`}
             >
-              <Wind className="w-6 h-6 text-cyan-400" />
-              <span className="text-xs font-bold uppercase tracking-wider">Lung Sounds</span>
+              <Wind className="w-6 h-6 text-blue-600" />
+              <span className="text-xs font-extrabold uppercase tracking-wider">Lung Sounds</span>
             </button>
 
             <button
               type="button"
               onClick={() => handleCategoryChange('mixed')}
-              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 ${
+              className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center gap-2 cursor-pointer ${
                 category === 'mixed'
-                  ? 'border-blue-500/50 bg-blue-500/10 text-blue-300 shadow-lg shadow-blue-500/10'
-                  : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'
+                  ? 'border-indigo-300 bg-indigo-50/80 text-indigo-700 font-bold shadow-sm'
+                  : 'border-slate-200 bg-slate-50/70 text-slate-600 hover:border-slate-300 hover:bg-slate-100'
               }`}
             >
-              <Sliders className="w-6 h-6 text-blue-400" />
-              <span className="text-xs font-bold uppercase tracking-wider">Mixed Sounds</span>
+              <Sliders className="w-6 h-6 text-indigo-600" />
+              <span className="text-xs font-extrabold uppercase tracking-wider">Mixed Sounds</span>
             </button>
           </div>
 
           {/* Location Dropdown */}
           <div>
-            <label className="block text-xs font-medium text-slate-400 mb-2">
+            <label className="block text-xs font-bold text-blue-900 mb-2">
               Chest Anatomical Location:
             </label>
             <select
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+              className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3 text-sm text-blue-950 font-medium focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition-all"
             >
               {CHEST_LOCATIONS[category].map((loc) => (
                 <option key={loc.id} value={loc.id}>
@@ -495,18 +495,18 @@ export const NewAnalysisPage: React.FC = () => {
         </div>
 
         {/* Patient Context (Optional) */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm space-y-4">
+          <label className="block text-xs font-extrabold text-blue-950 uppercase tracking-wider">
             3. Patient Information (Optional)
           </label>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5">Gender</label>
+              <label className="block text-xs font-bold text-blue-900 mb-1.5">Gender</label>
               <select
                 value={patientGender}
                 onChange={(e) => setPatientGender(e.target.value as any)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-blue-950 font-medium focus:bg-white focus:outline-none focus:border-blue-600"
               >
                 <option value="M">Male (M)</option>
                 <option value="F">Female (F)</option>
@@ -514,25 +514,25 @@ export const NewAnalysisPage: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5">Age (Years)</label>
+              <label className="block text-xs font-bold text-blue-900 mb-1.5">Age (Years)</label>
               <input
                 type="number"
                 value={patientAge}
                 onChange={(e) => setPatientAge(e.target.value)}
                 placeholder="Age in years"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-blue-950 font-medium focus:bg-white focus:outline-none focus:border-blue-600"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1.5">Clinical Notes</label>
+            <label className="block text-xs font-bold text-blue-900 mb-1.5">Clinical Notes</label>
             <textarea
               rows={2}
               value={clinicalNotes}
               onChange={(e) => setClinicalNotes(e.target.value)}
               placeholder="e.g. Holosystolic murmur audible at apex radiating to axilla..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-blue-950 font-medium placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600"
             />
           </div>
         </div>
@@ -541,12 +541,12 @@ export const NewAnalysisPage: React.FC = () => {
         <button
           type="submit"
           disabled={loadingStep !== null || !hasValidAudio}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-extrabold text-base shadow-xl shadow-cyan-500/25 hover:opacity-95 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-base shadow-xl shadow-blue-500/25 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
           {loadingStep ? (
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <span className="text-sm">{loadingStep}</span>
+              <span className="text-sm font-bold">{loadingStep}</span>
             </div>
           ) : (
             <>
@@ -561,3 +561,5 @@ export const NewAnalysisPage: React.FC = () => {
     </div>
   );
 };
+
+export default NewAnalysisPage;

@@ -8,12 +8,12 @@ export default {
     extend: {
       colors: {
         stethoscope: {
-          dark: '#0f172a',
-          card: '#1e293b',
-          accent: '#3b82f6',
-          cyan: '#06b6d4',
-          danger: '#ef4444',
-          success: '#10b981',
+          light: '#f8fafc',
+          card: '#ffffff',
+          primary: '#2563eb', // Royal Blue
+          primaryDark: '#1e3a8a', // Deep Blue Text
+          success: '#10b981', // Clinical Green
+          danger: '#ef4444', // Clinical Red
           warning: '#f59e0b',
         }
       },
