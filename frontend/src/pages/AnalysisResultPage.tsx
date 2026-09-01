@@ -26,6 +26,7 @@ import {
   Heart, 
   Wind 
 } from 'lucide-react';
+import { DiseaseProgressionCard } from '../components/clinical/DiseaseProgressionCard';
 
 export const AnalysisResultPage: React.FC = () => {
   const location = useLocation();
@@ -197,6 +198,14 @@ export const AnalysisResultPage: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Disease Progression & Pathological Differentials Card */}
+      <DiseaseProgressionCard
+        prediction={result.prediction}
+        classification={result.classification}
+        category={result.category}
+        progression={result.disease_progression}
+      />
 
       {/* "Why this prediction?" Explainability Section */}
       <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">

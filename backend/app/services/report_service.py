@@ -21,6 +21,191 @@ from reportlab.platypus import (
 )
 
 
+def get_disease_progression_details(category: str, prediction: str, classification: str) -> Dict[str, Any]:
+    """Provides structured clinical differential diagnoses, progression risks, and diagnostic workup."""
+    pred_lower = prediction.lower()
+    cat_lower = category.lower()
+    is_normal = "normal" in pred_lower or classification.lower() == "normal"
+    
+    if is_normal:
+        return {
+            "has_abnormality": False,
+            "primary_condition": "Normal Physiological State",
+            "potential_diseases": [],
+            "progression_risks": "Normal acoustic profile with regular cardiac cadence (S1/S2) and vesicular breath sounds. No evidence of pathological structural remodeling or airway obstruction.",
+            "recommended_workup": ["Routine annual health wellness checkup", "Standard preventive cardiovascular and pulmonary monitoring"],
+            "urgency": "Low (Routine Baseline)",
+        }
+        
+    # Abnormal Conditions
+    if "mid systolic" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Aortic Valve Stenosis / Outflow Tract Obstruction",
+            "potential_diseases": [
+                "Aortic Valve Stenosis (Calcific / Bicuspid)",
+                "Hypertrophic Cardiomyopathy (HOCM)",
+                "Pulmonic Valve Stenosis",
+                "Aortic Sclerosis",
+            ],
+            "progression_risks": "Untreated aortic stenosis forces the left ventricle to pump against high afterload resistance, leading to concentric Left Ventricular Hypertrophy (LVH), exertional angina, syncope, and eventual Congestive Heart Failure (HFrEF).",
+            "recommended_workup": [
+                "2D Transthoracic Echocardiogram (TTE) with Doppler gradient assessment",
+                "12-Lead Electrocardiogram (ECG) to assess voltage criteria for LVH and strain",
+                "Serum NT-proBNP / Troponin biomarker quantification",
+                "Cardiology referral for surgical or Transcatheter Aortic Valve Replacement (TAVR) evaluation",
+            ],
+            "urgency": "High Priority (Cardiology Referral Recommended)",
+        }
+    elif "late systolic" in pred_lower or "holosystolic" in pred_lower or "mitral" in pred_lower or "regurgitation" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Mitral / Tricuspid Valve Regurgitation",
+            "potential_diseases": [
+                "Mitral Valve Prolapse (MVP / Barlow's Syndrome)",
+                "Chronic Mitral Regurgitation",
+                "Tricuspid Valve Incompetence",
+                "Ventricular Septal Defect (VSD)",
+            ],
+            "progression_risks": "Chronic retrograde volume overload leads to Left Atrial Enlargement (LAE), secondary pulmonary venous hypertension, elevated stroke risk from Atrial Fibrillation, and progressive eccentric left ventricular dilation.",
+            "recommended_workup": [
+                "2D Echocardiogram with Color Flow Doppler mapping (regurgitant volume/fraction)",
+                "24-Hour to 48-Hour Holter Monitor for supraventricular arrhythmias",
+                "Chest Radiograph (PA view) for cardiomegaly and pulmonary venous congestion",
+                "Evaluation for transcatheter edge-to-edge repair (MitraClip) or valve surgery",
+            ],
+            "urgency": "Moderate to High Priority",
+        }
+    elif "diastolic" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Aortic Regurgitation / Mitral Stenosis",
+            "potential_diseases": [
+                "Aortic Valve Regurgitation (Aortic Incompetence)",
+                "Rheumatic Mitral Stenosis",
+                "Tricuspid Stenosis",
+            ],
+            "progression_risks": "Diastolic murmurs are almost universally pathological. Persistent diastolic regurgitation causes severe left ventricular volume overload, elevated end-diastolic pressures, and rapid progression to acute pulmonary edema.",
+            "recommended_workup": [
+                "Urgent Comprehensive Transthoracic Echocardiogram (TTE)",
+                "Cardiac Magnetic Resonance (CMR) Imaging for precise regurgitant fraction quantification",
+                "Ambulatory Blood Pressure hemodynamic evaluation",
+                "Prompt Formal Cardiology / Cardiothoracic Consultation",
+            ],
+            "urgency": "Urgent (Comprehensive Cardiac Workup Required)",
+        }
+    elif "s3" in pred_lower or "s4" in pred_lower or "gallop" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Elevated Filling Pressures & Ventricular Stiffness",
+            "potential_diseases": [
+                "Congestive Heart Failure (HFrEF / HFpEF)",
+                "Hypertensive Cardiomyopathy",
+                "Dilated Cardiomyopathy",
+                "Ischemic Heart Disease / Coronary Artery Disease",
+            ],
+            "progression_risks": "Gallop sounds indicate stiffened ventricular walls and high filling pressures. If unmanaged, this progresses to decompensated heart failure exacerbations and frequent hospitalizations.",
+            "recommended_workup": [
+                "Serum NT-proBNP & Troponin I blood biomarkers",
+                "2D Echocardiogram for Left Ventricular Ejection Fraction (LVEF) & diastolic function grading",
+                "Chest X-Ray for Kerley B lines and pulmonary vascular cephalization",
+                "Initiation/optimization of Guideline-Directed Medical Therapy (GDMT)",
+            ],
+            "urgency": "High Priority (Heart Failure Evaluation)",
+        }
+    elif "wheez" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Lower Airway Bronchospasm & Airway Obstruction",
+            "potential_diseases": [
+                "Bronchial Asthma (Acute Exacerbation)",
+                "Chronic Obstructive Pulmonary Disease (COPD / Chronic Bronchitis / Emphysema)",
+                "Acute Reactive Airway Bronchitis",
+                "Cardiac Asthma (secondary to pulmonary venous congestion)",
+            ],
+            "progression_risks": "Ongoing airway narrowing causes air trapping, alveolar hyperinflation, ventilation-perfusion mismatch, respiratory muscle fatigue, and acute hypoxemic respiratory failure.",
+            "recommended_workup": [
+                "Spirometry / Pulmonary Function Tests (PFTs) with pre/post-bronchodilator reversibility",
+                "Continuous Pulse Oximetry (SpO2) and Arterial Blood Gas (ABG) analysis",
+                "Chest Radiograph (PA & Lateral views) to exclude pneumothorax or infiltration",
+                "Inhaled Corticosteroid (ICS) + Long-Acting Beta Agonist (LABA) therapy assessment",
+            ],
+            "urgency": "Moderate to Urgent (if accompanying resting dyspnea)",
+        }
+    elif "crackle" in pred_lower or "crepitation" in pred_lower or "fine crackle" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Alveolar Infiltration & Interstitial Lung Pathology",
+            "potential_diseases": [
+                "Idiopathic Pulmonary Fibrosis (IPF) / Interstitial Lung Disease (ILD)",
+                "Congestive Heart Failure with Alveolar Pulmonary Edema",
+                "Bacterial or Viral Pneumonia / Pneumonitis",
+                "Bronchiectasis / Atelectasis",
+            ],
+            "progression_risks": "Signifies fluid or fibrotic stiffness in terminal respiratory units. Left unaddressed, progressive parenchymal remodeling causes permanent gas-diffusion impairment, pulmonary arterial hypertension, and chronic hypoxia.",
+            "recommended_workup": [
+                "High-Resolution Computed Tomography (HRCT) of the Chest",
+                "Diffusion Capacity of Carbon Monoxide (DLCO) & 6-Minute Walk Test",
+                "2D Echocardiogram to differentiate cardiogenic vs non-cardiogenic pulmonary congestion",
+                "Comprehensive Pulmonology referral",
+            ],
+            "urgency": "High Priority (Pulmonary Evaluation Required)",
+        }
+    elif "rhonchi" in pred_lower or "rub" in pred_lower or "stridor" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Large Airway Secretion Accumulation & Pleural Inflammation",
+            "potential_diseases": [
+                "Acute / Chronic Bronchitis",
+                "Lobar / Broncho-Pneumonia",
+                "Bronchiectasis with Secretion Stasis",
+                "Pleurisy / Pleural Friction Rub",
+            ],
+            "progression_risks": "Mucus stasis increases the risk of severe bacterial superinfections, mucus plugging, lobar atelectasis, and progression to systemic sepsis.",
+            "recommended_workup": [
+                "Chest Radiography / High-Resolution Chest CT",
+                "Sputum Culture, Gram Stain, and Cytology",
+                "Complete Blood Count (CBC) with Differential and C-Reactive Protein (CRP)",
+                "Targeted antimicrobial therapy and airway clearance physiotherapy",
+            ],
+            "urgency": "Moderate to High",
+        }
+    elif "mixed" in cat_lower or "mixed" in pred_lower:
+        return {
+            "has_abnormality": True,
+            "primary_condition": "Combined Cardiopulmonary Syndrome",
+            "potential_diseases": [
+                "Cor Pulmonale (Right Heart Failure secondary to Severe COPD/ILD)",
+                "Congestive Heart Failure with Secondary Pulmonary Edema & Reactive Airways",
+                "Combined Valvular Heart Disease with Chronic Respiratory Disease",
+            ],
+            "progression_risks": "Dual cardiac and pulmonary disease accelerates biventricular hemodynamic failure, worsening hypoxemia and increasing hospital admission rates.",
+            "recommended_workup": [
+                "Simultaneous 2D Echocardiography + Full Pulmonary Function Testing (PFTs)",
+                "Contrast CT Angiography / HRCT Chest",
+                "Serum NT-proBNP and Arterial Blood Gas (ABG) panel",
+                "Joint Multidisciplinary Cardio-Pulmonary Clinical Consultation",
+            ],
+            "urgency": "Urgent Priority (Multidisciplinary Workup Needed)",
+        }
+    else:
+        return {
+            "has_abnormality": True,
+            "primary_condition": f"Auscultation Anomaly ({prediction})",
+            "potential_diseases": [
+                "Cardiovascular Structural / Valvular Abnormality",
+                "Adventitious Respiratory Airway Pathology",
+            ],
+            "progression_risks": "Acoustic turbulence indicates mechanical or flow disruption within the cardiopulmonary tract requiring further diagnostic confirmation.",
+            "recommended_workup": [
+                "Follow-up Clinical Auscultation with High-Fidelity Digital Recording",
+                "Confirmatory 2D Echocardiogram or Chest Radiograph",
+                "Primary Physician / Specialist Evaluation",
+            ],
+            "urgency": "Moderate Priority",
+        }
+
+
 def get_clinical_explanation(category: str, prediction: str, classification: str, confidence: float) -> str:
     """Generates an evidence-based, plain-language clinical explanation of the AI auscultation findings."""
     pred_lower = prediction.lower()
@@ -331,23 +516,35 @@ def generate_clinical_report_pdf(
     story.append(Paragraph(plain_explanation, body_style))
     story.append(Spacer(1, 8))
 
-    # 6. Clinical Recommendations
-    story.append(Paragraph("Clinical Recommendations & Next Steps", heading_style))
-    recs = getattr(report, "recommendations", None)
-    if not recs:
-        if is_normal:
+    # 5b. Disease Progression & Associated Pathologies (if abnormal)
+    progression_info = get_disease_progression_details(category_val, prediction_val, "Normal" if is_normal else "Abnormal")
+    if progression_info.get("has_abnormality"):
+        story.append(Paragraph("Associated Diseases & Clinical Progression Risks", heading_style))
+        
+        # Potential diseases list
+        diseases_str = ", ".join(progression_info.get("potential_diseases", []))
+        story.append(Paragraph(f"<b>Primary Clinical Correlation:</b> {progression_info.get('primary_condition')}", body_style))
+        if diseases_str:
+            story.append(Paragraph(f"<b>Differential Diagnoses:</b> {diseases_str}", body_style))
+        story.append(Spacer(1, 3))
+        story.append(Paragraph(f"<b>Progression Risk If Untreated:</b> {progression_info.get('progression_risks')}", body_style))
+        story.append(Spacer(1, 3))
+        story.append(Paragraph(f"<b>Urgency Rating:</b> {progression_info.get('urgency')}", body_style))
+        story.append(Spacer(1, 8))
+
+    # 6. Clinical Recommendations & Diagnostic Workup
+    story.append(Paragraph("Recommended Diagnostic Workup & Next Steps", heading_style))
+    workup_list = progression_info.get("recommended_workup", [])
+    if workup_list:
+        for item in workup_list:
+            story.append(Paragraph(f"• {item}", body_style))
+    else:
+        recs = getattr(report, "recommendations", None)
+        if not recs:
             recs = "No acute cardiopulmonary auscultation abnormalities identified. Continue routine clinical monitoring as indicated."
-        else:
-            recs = (
-                "1. Correlate auscultation findings with patient history, physical examination, and vital signs.\n"
-                "2. Consider 12-lead Electrocardiogram (ECG) and Transthoracic Echocardiogram (TTE) for cardiac murmur evaluation.\n"
-                "3. Consider Chest X-Ray / Spirometry for persistent adventitious lung sounds.\n"
-                "4. Schedule follow-up auscultation in 2 to 4 weeks if clinical symptoms develop."
-            )
-    
-    for line in recs.split("\n"):
-        if line.strip():
-            story.append(Paragraph(f"• {line.strip()}", body_style))
+        for line in recs.split("\n"):
+            if line.strip():
+                story.append(Paragraph(f"• {line.strip()}", body_style))
 
     story.append(Spacer(1, 14))
 

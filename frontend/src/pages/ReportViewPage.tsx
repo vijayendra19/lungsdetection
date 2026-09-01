@@ -15,6 +15,7 @@ import {
   Heart, 
   Wind 
 } from 'lucide-react';
+import { DiseaseProgressionCard } from '../components/clinical/DiseaseProgressionCard';
 
 export const ReportViewPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -242,6 +243,14 @@ export const ReportViewPage: React.FC = () => {
             {report.clinical_explanation || report.clinical_summary}
           </div>
         </div>
+
+        {/* Disease Progression & Differential Diagnoses */}
+        <DiseaseProgressionCard
+          prediction={report.primary_diagnosis}
+          classification={isNormal ? 'Normal' : 'Abnormal'}
+          category={report.sound_category || 'heart'}
+          progression={report.disease_progression}
+        />
 
         {/* Recommendations */}
         {report.recommendations && (

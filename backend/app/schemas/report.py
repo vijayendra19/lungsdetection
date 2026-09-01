@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field, ConfigDict
 
 
@@ -36,6 +36,11 @@ class ReportResponse(BaseModel):
     clinical_summary: str
     recommendations: Optional[str] = None
     status: str
+    chest_location: Optional[str] = None
+    sound_category: Optional[str] = None
+    confidence: Optional[float] = None
+    clinical_explanation: Optional[str] = None
+    disease_progression: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
 

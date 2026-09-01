@@ -166,6 +166,20 @@ async def analyze_audio_recording(
         category=category,
     )
     
+    # Generate clinical explanation & disease progression details
+    from app.services.report_service import get_clinical_explanation, get_disease_progression_details
+    explanation = get_clinical_explanation(
+        category=inference_result["category"],
+        prediction=inference_result["prediction"],
+        classification=inference_result["classification"],
+        confidence=inference_result["confidence"],
+    )
+    progression = get_disease_progression_details(
+        category=inference_result["category"],
+        prediction=inference_result["prediction"],
+        classification=inference_result["classification"],
+    )
+
     # Save or update in `analyses` table
     existing_analysis = db.query(Analysis).filter(Analysis.recording_id == recording.id).first()
     
@@ -205,6 +219,8 @@ async def analyze_audio_recording(
         gradcam_image=inference_result["gradcam_image"],
         class_probabilities=inference_result["class_probabilities"],
         inference_time_ms=inference_result["inference_time_ms"],
+        clinical_explanation=explanation,
+        disease_progression=progression,
     )
 
 

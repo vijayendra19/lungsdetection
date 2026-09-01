@@ -71,6 +71,12 @@ def get_analysis_detail(
         classification=classification,
         confidence=float(analysis.confidence_score),
     )
+    from app.services.report_service import get_disease_progression_details
+    progression = get_disease_progression_details(
+        category=recording.sound_category,
+        prediction=analysis.predicted_class,
+        classification=classification,
+    )
 
     return {
         "id": analysis.id,
@@ -91,6 +97,7 @@ def get_analysis_detail(
         "gradcam_image": gradcam_image,
         "inference_time_ms": float(analysis.inference_time_ms),
         "clinical_explanation": explanation,
+        "disease_progression": progression,
         "patient_gender": recording.patient_gender,
         "patient_age": recording.patient_age,
         "clinical_notes": recording.clinical_notes,

@@ -1,3 +1,5 @@
+import { DiseaseProgression } from './audio';
+
 export interface ClinicalReport {
   id: string;
   user_id: string;
@@ -9,6 +11,7 @@ export interface ClinicalReport {
   severity: string;
   clinical_summary: string;
   clinical_explanation?: string;
+  disease_progression?: DiseaseProgression;
   recommendations?: string;
   status: string;
   sound_category?: string;

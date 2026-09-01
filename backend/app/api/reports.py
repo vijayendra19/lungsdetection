@@ -181,6 +181,12 @@ def get_report_or_pdf(
         classification="Normal" if "normal" in analysis.predicted_class.lower() else "Abnormal",
         confidence=float(analysis.confidence_score),
     )
+    from app.services.report_service import get_disease_progression_details
+    progression = get_disease_progression_details(
+        category=recording.sound_category,
+        prediction=analysis.predicted_class,
+        classification="Normal" if "normal" in analysis.predicted_class.lower() else "Abnormal",
+    )
 
     return {
         "id": report.id,
@@ -193,6 +199,7 @@ def get_report_or_pdf(
         "severity": report.severity,
         "clinical_summary": report.clinical_summary,
         "clinical_explanation": explanation,
+        "disease_progression": progression,
         "recommendations": report.recommendations,
         "status": report.status,
         "sound_category": recording.sound_category,

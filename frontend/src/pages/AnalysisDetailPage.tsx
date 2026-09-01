@@ -10,6 +10,7 @@ import {
   ArrowLeft, 
   ShieldAlert 
 } from 'lucide-react';
+import { DiseaseProgressionCard } from '../components/clinical/DiseaseProgressionCard';
 
 export const AnalysisDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -169,6 +170,14 @@ export const AnalysisDetailPage: React.FC = () => {
           <span className="text-[10px] text-slate-400 font-semibold">Latency: {data.inference_time_ms} ms</span>
         </div>
       </div>
+
+      {/* Disease Progression & Clinical Differentials */}
+      <DiseaseProgressionCard
+        prediction={data.prediction}
+        classification={data.classification}
+        category={data.category}
+        progression={data.disease_progression}
+      />
 
       {/* Clinical Explanation Card */}
       {data.clinical_explanation && (
